@@ -6,7 +6,7 @@ const apiUrl =
 
 export default createStore({
   state: {
-    cryptoDetails: {},
+    cryptoDetails: [],
     searchQuery: "",
   },
   getters: {

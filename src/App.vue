@@ -1,19 +1,30 @@
 <template>
-  <div class="container text-white">
+  <div class="container text-white text-center sm:ml-7">
     <Header heading="Crypton" subHeading="One Place To Stalk Cryptos"></Header>
     <Searchbar></Searchbar>
-    <div class="grid grid-cols-2 sm:grid-cols-4 mt-5 gap-y-3">
+    <div class="container sm:ml-10">
+      <Loader v-if="showLoader"></Loader>
+      <div class="container mt-12 text-xl" v-else-if="showEmpty">
+        <span class="font-semibold"
+          >Hmm... Could not find anything like this.</span
+        >
+      </div>
       <div
-        class="container rounded-md"
-        v-for="details in filteredCryptoDetails"
-        :key="details"
+        class="grid grid-cols-2 sm:grid-cols-4 mt-5 gap-y-3 gap-x-3 mb-3"
+        v-else
       >
-        <DataContainer
-          :name="details.name"
-          :imgUrl="details.image"
-          :price="details.current_price"
-          :change="details.price_change_percentage_24h"
-        ></DataContainer>
+        <div
+          class="container"
+          v-for="details in filteredCryptoDetails"
+          :key="details"
+        >
+          <DataContainer
+            :name="details.name"
+            :imgUrl="details.image"
+            :price="details.current_price"
+            :change="details.price_change_percentage_24h"
+          ></DataContainer>
+        </div>
       </div>
     </div>
   </div>
@@ -23,11 +34,16 @@
 import Header from "@/components/Header.vue";
 import Searchbar from "@/components/Searchbar.vue";
 import DataContainer from "@/components/DataContainer.vue";
+import Loader from "@/components/Loader.vue";
 
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
+
+const showEmpty = computed(() => {
+  return filteredCryptoDetails.value.length == 0;
+});
 
 onMounted(async () => {
   const apiPromise = store.dispatch("fetchCryptoData");
@@ -41,16 +57,27 @@ onMounted(async () => {
     });
 });
 
+const showLoader = computed(() => {
+  return store.getters.getCryptoDetails.length == 0;
+});
+
 const filteredCryptoDetails = computed(() => {
-  const currDetails = store.getters.getCryptoDetails;
+  let currDetails = store.getters.getCryptoDetails;
+  let searchQuery = store.getters.getSearchQuery;
+
   if (Object.keys(currDetails).length == 0) {
+    return [];
+  }
+
+  if (searchQuery.length == 0) {
     return currDetails;
   }
-  const searchQuery = store.getters.getSearchQuery;
 
-  return currDetails.filter((detail) => {
+  const filtered = currDetails.filter((detail) => {
     return detail.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
+
+  return filtered;
 });
 </script>
 

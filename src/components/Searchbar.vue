@@ -6,7 +6,7 @@
     >
       <input
         type="search"
-        class="border-2 bg-black p-2 rounded-md font-semibold"
+        class="border-2 bg-black p-2 rounded-md font-semibold outline-none"
         id="exampleSearch2"
         placeholder="Search cryptos"
         v-model="query"

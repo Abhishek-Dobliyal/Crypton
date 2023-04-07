@@ -1,5 +1,5 @@
 <template>
-  <div class="container text-center my-6">
+  <div class="container my-6">
     <header class="font-bold text-5xl">
       {{ heading }}
     </header>
