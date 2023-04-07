@@ -6,23 +6,23 @@
     >
       <input
         type="search"
-        class="peer block min-h-[auto] w-full rounded bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0 border-2"
+        class="border-2 bg-black p-2 rounded-md font-semibold"
         id="exampleSearch2"
         placeholder="Search cryptos"
+        v-model="query"
       />
-      <label
-        for="exampleSearch2"
-        class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-white transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none peer-focus:text-white peer-focus:bg-black px-1"
-        >Search Cryptos</label
-      >
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref, watch } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
+const query = ref("");
 
-const cryptoDetails = store.getters.getCryptoDetails;
+watch(query, () => {
+  store.commit("setSearchQuery", query.value);
+});
 </script>
